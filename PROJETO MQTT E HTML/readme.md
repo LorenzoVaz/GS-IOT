@@ -84,3 +84,8 @@ A interface mostra:
 ☔️ Chuva detectada
 
 📞 Contato da polícia civil local: 197
+
+
+- INTEGRANTES DO PROJETO
+- RM 553941 - LORENZO AUGUSTO VAZ FRANCISCO
+- RM 553079 - GABRIEL  OLIVEIRA RODRIGUES DOS SANTOS
