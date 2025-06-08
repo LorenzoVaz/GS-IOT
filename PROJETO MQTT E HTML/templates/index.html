@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alerta Cidadão - Enchentes</title>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .app-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin: 0 0 30px 0;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px 40px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+      transition: transform 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+
+    #mensagem {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      color: #fff;
+      background-color: #b30000;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+      line-height: 1.6;
+    }
+
+    .info-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    .info-box span {
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-top: 16px;
+      color: #eee;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 20px;
+      }
+
+      #mensagem {
+        flex-direction: column;
+        font-size: 1rem;
+        gap: 10px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .app-icon {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ícone do App -->
+  <svg class="app-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#ffd93b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+    <path d="M13.73 21a2 2 0 01-3.46 0" />
+  </svg>
+
+  <h1>Alerta Cidadão</h1>
+
+  <div class="card" role="region" aria-label="Alerta de enchente em tempo real">
+    <div id="mensagem">Aguardando dados do sensor...</div>
+    <p>Monitoramento de enchentes em tempo real</p>
+  </div>
+
+  <script>
+    const socket = io();
+    socket.on('distance_update', function (data) {
+      try {
+        const info = JSON.parse(data.distance);
+        const chuva = info.chuva === 1 ? "🌧️ Chuva detectada" : "☀️ Sem chuva";
+        const nivel = parseFloat(info.nivel_agua_cm).toFixed(1);
+
+        let alerta = "";
+        if (nivel < 100) {
+          alerta = "🟢 Nível seguro";
+        } else if (nivel < 200) {
+          alerta = "🟠 Atenção: Nível subindo";
+        } else {
+          alerta = "🔴 Alerta de Enchente Próxima";
+        }
+
+        const telefone = "📞 Polícia Civil: 197";
+
+        const mensagemHTML = `
+          <div class="info-box">🚨 <span>${alerta}</span></div>
+          <div class="info-box">💧 <span>Nível da água: ${nivel} cm</span></div>
+          <div class="info-box">☁️ <span>${chuva}</span></div>
+          <div class="info-box">${telefone}</div>
+        `;
+        document.getElementById('mensagem').innerHTML = mensagemHTML;
+
+      } catch (e) {
+        document.getElementById('mensagem').textContent = "Erro ao processar dados recebidos.";
+      }
+    });
+  </script>
+
+</body>
+</html>

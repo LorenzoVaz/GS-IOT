@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "author": "Mohd Kamarul Zaman",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": 35.99,
+      "left": -136.66,
+      "attrs": { "env": "micropython-20220618-v1.19.1" }
+    },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -113.7, "left": -176.9, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "ultrasonic1:VCC", "esp:VIN", "red", [ "v18.6", "h-77.43", "v188" ] ],
+    [ "esp:GND.2", "ultrasonic1:GND", "black", [ "h-25.51", "v-169.59", "h81.33" ] ],
+    [ "esp:D5", "ultrasonic1:TRIG", "green", [ "h29.53", "v-118.56", "h-86.67" ] ],
+    [ "esp:D18", "ultrasonic1:ECHO", "green", [ "h18.86", "v-116.96", "h-64.67", "v4" ] ]
+  ],
+  "dependencies": {}
+}
